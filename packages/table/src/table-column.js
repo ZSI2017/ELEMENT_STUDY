@@ -170,7 +170,9 @@ export default {
   },
 
   computed: {
+    // 这里的owner  可以标识 当前 table=-column 标签的父类table 标签
     owner() {
+      //  通过while循环，向上遍历找到el-table 标签，在最外层的父标签中，会有一个tableId 来作为标识
       let parent = this.$parent;
       while (parent && !parent.tableId) {
         parent = parent.$parent;
@@ -182,6 +184,7 @@ export default {
   created() {
     this.customRender = this.$options.render;
     this.$options.render = h => h('div', this.$slots.default);
+    //  table -column 的节点id 会自增，每次挂载都会 不同
     this.columnId = (this.$parent.tableId || (this.$parent.columnId + '_')) + 'column_' + columnIdSeed++;
 
     let parent = this.$parent;
@@ -194,6 +197,7 @@ export default {
     if (width !== undefined) {
       width = parseInt(width, 10);
       if (isNaN(width)) {
+        //  如果宽度 没有设置，则默认设置成 null
         width = null;
       }
     }
@@ -202,6 +206,7 @@ export default {
     if (minWidth !== undefined) {
       minWidth = parseInt(minWidth, 10);
       if (isNaN(minWidth)) {
+         // 最小宽度如果没有被设置，则默认设置成80
         minWidth = 80;
       }
     }
@@ -243,6 +248,7 @@ export default {
 
     objectAssign(column, forced[type] || {});
 
+    //  将 column 中的标签 用户设置的的属性通过columnConfig 传递给父table 标签中
     this.columnConfig = column;
 
     let renderCell = column.renderCell;
