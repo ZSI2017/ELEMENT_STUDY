@@ -72,6 +72,7 @@ const forced = {
   }
 };
 
+//  这里计算默认的 组件
 const getDefaultColumn = function(type, options) {
   const column = {};
 
@@ -305,6 +306,11 @@ export default {
   },
 
   watch: {
+    label(newVal) {
+       if(this.columnConfig) {
+          this. columnConfig.label = newVal;
+       }
+    },
     label(newVal) {
       if (this.columnConfig) {
         this.columnConfig.label = newVal;
