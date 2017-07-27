@@ -438,6 +438,8 @@
     },
 
     data() {
+      // 在在最外面的table 标签中， 渲染对应的 column 单元格，
+      //
       const store = new TableStore(this, {
         rowKey: this.rowKey,
         defaultExpandAll: this.defaultExpandAll

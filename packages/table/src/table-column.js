@@ -6,9 +6,13 @@ import { getValueByPath } from './util';
 let columnIdSeed = 1;
 
 const defaults = {
+  // 这里默认设置了对应列的类型，
+  // 首先第一种类型是 默认的 defaults  类型
   default: {
     order: ''
   },
+
+  // selection 类型表示该列显示显示多选
   selection: {
     width: 48,
     minWidth: 48,
@@ -16,13 +20,16 @@ const defaults = {
     order: '',
     className: 'el-table-column--selection'
   },
+  //  则 表示显示为一可以被打开的，或者是关闭的一个名包包块。 这里的快读和长度都是hi固定
   expand: {
     width: 48,
     minWidth: 48,
     realWidth: 48,
     order: ''
   },
+    // 设置成index，则表示 改行的索引（开始显示索）从1 开始计数 ，
   index: {
+    // 这里 设置了固定的跨度
     width: 48,
     minWidth: 48,
     realWidth: 48,
@@ -32,33 +39,41 @@ const defaults = {
 
 const forced = {
   selection: {
+    // 默认使用渲染 多选框列的头部是，使用ElCheckbox 组件渲染头部
+    // 点击 头部的 复选框时，触发 toggleAllSelection 全选还是 全不选 事件
     renderHeader: function(h) {
       return <el-checkbox
         nativeOn-click={ this.toggleAllSelection }
         value={ this.isAllSelected } />;
     },
+   // 渲染 多选框列 对应的多选框的内容，使用ElCheckbox 组件
     renderCell: function(h, { row, column, store, $index }) {
       return <el-checkbox
         value={ store.isSelected(row) }
         disabled={ column.selectable ? !column.selectable.call(null, row, $index) : false }
         on-input={ () => { store.commit('rowSelectedChanged', row); } } />;
     },
+  //  默认 多选框的 列不可排序，不可通过拖拽改变宽度
     sortable: false,
     resizable: false
   },
   index: {
+    // 加入索引的渲染时，类渲染头部，直接返回数据的label
     renderHeader: function(h, { column }) {
       return column.label || '#';
     },
+    //  下面的内容渲染时，以当前索引为内容
     renderCell: function(h, { $index }) {
       return <div>{ $index + 1 }</div>;
     },
     sortable: false
   },
   expand: {
+    // 渲染一个可展开的列时i，不渲染头部，
     renderHeader: function(h, {}) {
       return '';
     },
+    //  渲染被隐藏的内容时，加上左侧的向右图标
     renderCell: function(h, { row, store }, proxy) {
       const expanded = store.states.expandRows.indexOf(row) > -1;
       return <div class={ 'el-table__expand-icon ' + (expanded ? 'el-table__expand-icon--expanded' : '') }
@@ -72,7 +87,8 @@ const forced = {
   }
 };
 
-//  这里计算默认的 组件
+//  这里计算默认的 组件，
+//把用户设置的 参数和默认的column 参数对象合并 返回的是所有的
 const getDefaultColumn = function(type, options) {
   const column = {};
 
@@ -87,6 +103,7 @@ const getDefaultColumn = function(type, options) {
     }
   }
 
+    // 在column 属性中设置最小的宽度 为80 ( 如果用户没有设置minWidth 的话)
   if (!column.minWidth) {
     column.minWidth = 80;
   }
@@ -246,15 +263,15 @@ export default {
       filteredValue: this.filteredValue || [],
       filterPlacement: this.filterPlacement || ''
     });
-
+     // 强制更新 renderHeader 和 renderCell 函数，使用默认的渲染方法
     objectAssign(column, forced[type] || {});
 
     //  将 column 中的标签 用户设置的的属性通过columnConfig 传递给父table 标签中
     this.columnConfig = column;
-
+    // 定义 renderCell 的 默认的 renderCell 渲染函数
     let renderCell = column.renderCell;
     let _self = this;
-
+     //  如果是可以折叠的 类
     if (type === 'expand') {
       owner.renderExpanded = function(h, data) {
         return _self.$scopedSlots.default
@@ -305,30 +322,23 @@ export default {
     this.owner.store.commit('removeColumn', this.columnConfig);
   },
 
+//   在 watch  方法中实时监听监听 column 中传来的传来的自定义属性值
   watch: {
-    label(newVal) {
-       if(this.columnConfig) {
-          this. columnConfig.label = newVal;
-       }
-    },
     label(newVal) {
       if (this.columnConfig) {
         this.columnConfig.label = newVal;
       }
     },
-
     prop(newVal) {
       if (this.columnConfig) {
         this.columnConfig.property = newVal;
       }
     },
-
     property(newVal) {
       if (this.columnConfig) {
         this.columnConfig.property = newVal;
       }
     },
-
     filters(newVal) {
       if (this.columnConfig) {
         this.columnConfig.filters = newVal;
@@ -395,7 +405,7 @@ export default {
     } else {
       columnIndex = [].indexOf.call(parent.$el.children, this.$el);
     }
-
+   // 前面在 created 的生命周期中 创建的 columnConfig 参数，传到公共的table-store 全局的数据方法中，让在table 作用域的范围中，来渲染cell表格
     owner.store.commit('insertColumn', this.columnConfig, columnIndex, this.isSubColumn ? parent.columnConfig : null);
   }
 };
