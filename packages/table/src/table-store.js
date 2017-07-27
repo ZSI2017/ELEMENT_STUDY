@@ -46,6 +46,7 @@ const toggleRowSelection = function(states, row, selected) {
     // 在这个构造函数中定义tableStore中的 初始状态 变量 相当于vuex 中的state 对象中存放的 变量初始转状态。
 const TableStore = function(table, initialState = {}) {
       //  在 TableStore 中 中 传入的table  数据是必须的
+      // 这里是在 在传入 table组件的引用， 
   if (!table) {
     throw new Error('Table is required.');
   }
