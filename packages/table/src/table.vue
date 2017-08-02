@@ -122,7 +122,7 @@
       </div>
       <div class="el-table__fixed-footer-wrapper" ref="rightFixedFooterWrapper" v-if="showSummary" v-show="data && data.length > 0">
         <table-footer
-          fixed="right"
+           fixed="right"
           :border="border"
           :sum-text="sumText || t('el.table.sumText')"
           :summary-method="summaryMethod"
@@ -438,8 +438,7 @@
     },
 
     data() {
-      // 在在最外面的table 标签中， 渲染对应的 column 单元格，
-      //
+      // 在在最外面的table 标签中， 渲染对应的 column
       const store = new TableStore(this, {
         rowKey: this.rowKey,
         defaultExpandAll: this.defaultExpandAll
