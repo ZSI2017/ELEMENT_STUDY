@@ -39,7 +39,7 @@
         </template>
         <template slot="append" v-if="$slots.append">
           <slot name="append"></slot>
-        </template> 
+        </template>
     </el-input>
   </div>
 </template>
@@ -51,6 +51,7 @@
   export default {
     name: 'ElInputNumber',
     directives: {
+
       repeatClick: {
         bind(el, binding, vnode) {
           let interval = null;
@@ -179,6 +180,7 @@
         this.$refs.input.setCurrentValue(this.currentValue);
       },
       setCurrentValue(newVal) {
+
         const oldVal = this.currentValue;
         if (newVal >= this.max) newVal = this.max;
         if (newVal <= this.min) newVal = this.min;
@@ -190,6 +192,7 @@
         this.$emit('input', newVal);
         this.currentValue = newVal;
       },
+      // 监听 input
       handleInput(value) {
         if (value === '') {
           return;

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html class="extended-layout" id="guoguo">
+
+<head>
+  <meta charset="utf-8">
+  <title>寄快递</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+  <meta name="data-spm" content="a2d0d">
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="format-detection" content="email=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0" />
+  <link rel="stylesheet" href="https://as.alipayobjects.com/g/h5-lib/antui/9.5.3/amui.css?v=1012636662_31028">
+  <link rel="stylesheet" type="text/css" href="//g.alicdn.com/mcn/app-alipay-grab2post/1.6.8/common.css?v=2276220553_5018" media="all" />
+  <link rel="stylesheet" type="text/css" href="//g.alicdn.com/mcn/app-alipay-grab2post/1.6.8/index.css?v=1454476653_22070" media="all" />
+  <script src="//g.alicdn.com/cm/retlog/0.1.2/log.js?v=941252781_8214" crossorigin></script>
+  <script src="//as.alipayobjects.com/g/component/antbridge/1.1.1/antbridge.min.js?v=76384002_9437"></script>
+</head>
+
+<body id="J_Vue" data-spm="7914195">
+  <script type="text/javascript" src="//g.alicdn.com/alilog/wlog/0.4.8/??aplus_wap.js,spm_wap.js,spmact_wap.js" async defer></script>
+  <script type="text/javascript" id="aplus-sufei" src="//g.alicdn.com/secdev/sufei_data/3.0.9/index.js" async defer></script>
+  <script>
+    window.__WPO && window.__WPO.setConfig({
+      sample: 1,
+      spmId: "a312p.7914195"
+    });
+  </script>
+  <div class="fade" :class="{'in': ready}">
+    <div class="am-list-item banner-info" @click="goBannerHref" v-if="bannerInfo">
+      <div v-runtext>{{bannerInfo}}</div>
+    </div>
+    <div class="am-tab smart-am-tab">
+      <div class="am-tab-item" @click="toggleTab('pick')" data-tab="{{tabType == 'pick' ? 'selected' : ''}}">上门取件</div>
+      <div class="am-tab-item" @click="toggleTab('send')" data-tab="{{tabType == 'send' ? 'selected' : ''}}">驿站寄件</div>
+    </div>
+    <div class="tab-container">
+      <div class="tab-content" v-show="tabType == 'pick'">
+        <div class="smart-wrapper" id="J_Form">
+          <div class="am-list" am-mode="flat 43px">
+            <div class="am-list-body">
+              <smart-addr-tip :on-tip-click='showModal'></smart-addr-tip>
+              <div class="smart-contact-item">
+                <div class="smart-contact-left">
+                  <div class="line none"></div>
+                  <div class="dot"></div>
+                  <div class="line"></div>
+                </div>
+                <div class="smart-contact-mid bottom-border" @click="writeSmartAddress('send')">
+                  <div class="userinfo" :class="{'placeholder': !(formData.senderInfo && formData.senderInfo.provName)}">
+                    <div class="username">{{formData.senderInfo.name || '从哪里寄？'}}</div>
+                    <div class="phone" v-show="formData.senderInfo && formData.senderInfo.provName">{{formData.senderInfo.phone}}</div>
+                  </div>
+                  <div class="addr-info webkit-clamp-ellipsis"> {{formData.senderInfo.longAddr || '点击填写寄件地址'}} </div>
+                </div>
+                <div class="smart-contact-right bottom-border">
+                  <div class="contact-link" @click="selectSender"> 地址簿 </div>
+                </div>
+              </div>
+              <div class="smart-contact-item">
+                <div class="smart-contact-left bottom-border">
+                  <div class="line reverse"></div>
+                  <div class="dot orange"></div>
+                  <div class="line none reverse"></div>
+                </div>
+                <div class="smart-contact-mid bottom-border" @click="writeSmartAddress('receive')">
+                  <div class="smart-form">
+                    <div class="userinfo" :class="{'placeholder': !(formData.receiverInfo && formData.receiverInfo.provName)}">
+                      <div class="username">{{formData.receiverInfo.name || "您想寄到哪里？"}}</div>
+                      <div class="phone" v-show="formData.receiverInfo && formData.receiverInfo.provName">{{formData.receiverInfo.phone}}</div>
+                    </div>
+                    <div class="addr-info webkit-clamp-ellipsis"> {{formData.receiverInfo.longAddr || '点击填写收件地址'}} </div>
+                  </div>
+                </div>
+                <div class="smart-contact-right bottom-border">
+                  <div class="contact-link" @click="selectReceiver"> 地址簿 </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="am-list" am-mode="flat 43px" style="margin-top: 10.5px;">
+            <div class="am-list-body">
+              <a @click="selectServices" class="am-list-item">
+                <div class="am-list-content">
+                  <div class="list-item-major">期望上门时间</div>
+                </div>
+                <div class="am-list-extra">{{formData.serviceInfo ? formData.serviceInfo.name : pannelHint}}</div>
+                <div class="am-list-arrow" v-if="formData.serviceInfo"> <span class="am-icon" am-mode="arrow-horizontal"></span> </div>
+              </a>
+              <a @click="switchGoodType" class="am-list-item">
+                <div class="am-list-content">
+                  <div class="list-item-major">物品类型</div>
+                </div>
+                <div class="am-list-extra">{{formData.packageType || '请选择物品类型'}}</div>
+                <div class="am-list-arrow"><span class="am-icon" am-mode="arrow-horizontal"></span></div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-content" v-show="tabType == 'send'">
+        <div id="J_station_wraper">
+          <div class="am-list" am-mode="flat chip 43px">
+            <div class="am-list-body">
+              <a @click="goStationChosen" class="am-list-item">
+                <div class="am-list-content">
+                  <div class="list-item-major lg"> <address class="webkit-clamp-ellipsis">{{(stationData.stationInfo && stationData.stationInfo.stationName) || '附近没有驿站, 点击这里查找'}}</address>
+                    <div class="tag-list"> <span class="tag tag-blue" v-if="stationData.stationInfo && stationData.stationInfo.kuaidiNoHand === 'true'">快递单免手写</span> <span class="tag tag-blue" v-if="stationData.stationInfo && stationData.stationInfo.supportAlipay === 'true'">支付宝</span>                      <span class="tag tag-orange" v-if="stationData.stationInfo && stationData.stationInfo.standardPrice === 'true'">参考价</span> </div>
+                  </div>
+                </div>
+                <div class="am-list-arrow"><span class="am-icon" am-mode="arrow-horizontal"></span></div>
+              </a>
+              <a class="am-list-item">
+                <div class="am-list-thumb"> <img src="https://gw.alicdn.com/tps/TB1bfAFKpXXXXa6XpXXXXXXXXXX-38-46.png" alt="send" width="19" height="23"> </div>
+                <div @click="selectStationSender('send', 'grabStaSender')" class="am-list-content">
+                  <div v-if="stationData.senderInfo && stationData.senderInfo.provName" class="none" v-cloak>
+                    <div class="username">{{stationData.senderInfo.name}}<span class="phone"> {{stationData.senderInfo.phone}}</span></div>
+                  </div>
+                  <div v-else v-cloak class="placeholder"> {{stationData.senderInfoHint ? stationData.senderInfoHint: '请填写寄件人地址'}} </div>
+                </div>
+                <div class="am-list-arrow"><span class="am-icon" am-mode="arrow-horizontal"></span></div>
+              </a>
+              <a class="am-list-item leftpad">
+                <div class="am-list-thumb"> <img src="https://gw.alicdn.com/tps/TB1LPQsKpXXXXaGXVXXXXXXXXXX-38-46.png" alt="send" width="19" height="23"> </div>
+                <div @click="changeAddress('reciver', 'grabStaReceiver')" class="am-list-content">
+                  <div class="list-item-major none" v-cloak v-if="stationData.receiverInfo.name">
+                    <div class="username">{{stationData.receiverInfo.name}}<span class="phone">{{stationData.receiverInfo.phone}}</span></div> <address class="webkit-clamp-ellipsis text-content">{{stationData.receiverInfo.longAddr}}</address> </div>
+                  <div class="placeholder"
+                    v-cloak v-else> {{stationData.receiverInfoHint? stationData.receiverInfoHint: '获取买家收货地址失败'}} {{!needReceiverInfo ? '[选填]' : ''}} </div>
+                </div>
+                <div class="am-list-arrow"><span class="am-icon" am-mode="arrow-horizontal"></span></div>
+              </a>
+              <a @click="switchGoodType" class="am-list-item leftpad"> <span class="am-list-thumb thumb-holder"></span>
+                <div class="am-list-content">
+                  <div class="list-item-major lg">物品类型</div>
+                </div>
+                <div class="am-list-extra" v-cloak>{{stationData.packageType || '请选择物品类型'}}</div>
+                <div class="am-list-arrow"><span class="am-icon" am-mode="arrow-horizontal"></span></div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="fixbottom">
+    <div v-if="bottomObj.initialPrice" class="helpinfo">
+      <div class="carousel" :class="{'active': coupon && bottomObj.bAnimation}">
+        <div class="carousel-item"> {{bottomObj.priceInfo}}:1公斤<span class="num none" v-cloak v-if="bottomObj.initialPrice">{{bottomObj.initialPrice}}</span><span v-else>--</span>元, 续重<span class="num none" v-cloak v-if="bottomObj.addPrice">{{bottomObj.addPrice}}</span><span v-else>--</span>元
+          </div>
+        <div class="carousel-item none" v-cloak> <span v-if="coupon.type === 'normal'">您有优惠券，最高可抵扣<span class="num" v-else>{{coupon.amount}}</span>元</span> <span v-else>您有免首重优惠券</span> </div>
+        <div class="carousel-item none" v-cloak> {{bottomObj.priceInfo}}:1公斤<span class="num none" v-cloak v-if="bottomObj.initialPrice">{{bottomObj.initialPrice}}</span><span v-else>--</span>元, 续重<span class="num none" v-cloak v-if="bottomObj.addPrice">{{bottomObj.addPrice}}</span><span v-else>--</span>元
+          </div>
+      </div>
+      <div class="price-tool" @click="goToPriceTool" v-if="bottomObj.bFreight">运费估算</div>
+    </div>
+    <div class="agreements"> <label class="sm radiobox"> <input type="checkbox" name="agreement" v-model="agree"> <i class="icon sm"></i> 我已阅读并同意 </label> <a @click="goAgreetments">《服务协议》《禁限贵物品告知》</a> </div>
+    <div class="value"> <button type="button" class="am-button" @click="_dispatchSend(bottomObj.sendPostMethod, $event)" am-mode="blue 43px">我要寄件</button> </div>
+    <div class="loading"></div>
+  </div>
+  <smart-addr-modal v-ref:SmartAddrModal left-button-info="添加为寄件人" right-button-info="添加为收件人" :on-left-button="smartAddSender" :on-right-button="smartAddRceiver"></smart-addr-modal>
+  <script charset="utf-8" src="//g.alicdn.com/??mtb/lib-promise/3.1.1/polyfillB.js,mtb/lib-login/1.5.0/login.js,mtb/lib-mtop/2.0.10/mtop.js?v=770305269_29533"></script>
+  <script charset="utf-8" src="//g.alicdn.com/mcn/app-alipay-grab2post/1.6.8/index.js?v=2907293827_180543"></script>
+</body>
+
+</html>

@@ -7,27 +7,27 @@ export default {
   name: 'ElPagination',
 
   props: {
-    pageSize: {
+    pageSize: {        // 每页显示的条数。
       type: Number,
       default: 10
     },
 
-    small: Boolean,
+    small: Boolean,     // 小型分页器对应
 
-    total: Number,
+    total: Number,       // 同时记录当前的总页数
 
-    pageCount: Number,
+    pageCount: Number,   // 总的页面，
 
-    currentPage: {
+    currentPage: {    // 实时记录当前页数。
       type: Number,
       default: 1
     },
 
-    layout: {
+    layout: {   // 默认的分页器布局。每个单词对应渲染一个标签。
       default: 'prev, pager, next, jumper, ->, total'
     },
 
-    pageSizes: {
+    pageSizes: {    //  设置分页器中每页显示的个数选择器。
       type: Array,
       default() {
         return [10, 20, 30, 40, 50, 100];
@@ -37,8 +37,8 @@ export default {
 
   data() {
     return {
-      internalCurrentPage: 1,
-      internalPageSize: 0
+      internalCurrentPage: 1,      // 内部使用的当前页数，
+      internalPageSize: 0         // 内部使用的当前页的总条目数。
     };
   },
 
@@ -47,7 +47,8 @@ export default {
     const layout = this.layout || '';
     if (!layout) return;
     const TEMPLATE_MAP = {
-      prev: <prev></prev>,
+
+      prev: <prev></prev>,  
       jumper: <jumper></jumper>,
       pager: <pager currentPage={ this.internalCurrentPage } pageCount={ this.internalPageCount } on-change={ this.handleCurrentChange }></pager>,
       next: <next></next>,

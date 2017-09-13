@@ -10,7 +10,7 @@
           <slot name="title">
             <span class="el-dialog__title">{{title}}</span>
           </slot>
-          <button type="button" class="el-dialog__headerbtn" aria-label="Close" 
+          <button type="button" class="el-dialog__headerbtn" aria-label="Close"
                   v-if="showClose" @click="handleClose">
             <i class="el-dialog__close el-icon el-icon-close"></i>
           </button>
@@ -43,7 +43,7 @@
         type: Boolean,
         default: true
       },
-  
+
       modalAppendToBody: {
         type: Boolean,
         default: true
